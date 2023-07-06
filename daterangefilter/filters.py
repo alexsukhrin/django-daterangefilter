@@ -10,8 +10,8 @@ from django.conf import settings
 class DateRangeFilter(admin.FieldListFilter):
     def __init__(self, field, request, params, model, model_admin, field_path):
         self.field_name = field_path
-        self.lookup_kwarg_gte = '{}__gte'.format(field_path)
-        self.lookup_kwarg_lte = '{}__lte'.format(field_path)
+        self.lookup_kwarg_gte = f'{field_path}__gte'
+        self.lookup_kwarg_lte = f'{field_path}__lte'
         self.lookup_gte = params.get(self.lookup_kwarg_gte)
         self.lookup_lte = params.get(self.lookup_kwarg_lte)
         # todo: check if this is required in default admin
@@ -20,14 +20,14 @@ class DateRangeFilter(admin.FieldListFilter):
         if self.lookup_lte == '':
             params.pop(self.lookup_kwarg_lte)
         if self.lookup_gte and self.lookup_lte:
-            self.lookup_val = '{} - {}'.format(self.lookup_gte, self.lookup_lte)
+            self.lookup_val = f'{self.lookup_gte} - {self.lookup_lte}'
             # if we are filtering DateTimeField we should add one day to final date
             if "__" in field_path:
                 related_model, field = field_path.split("__")
                 field = model._meta.get_field(related_model).related_model._meta.get_field(field)
             else:
                 field = model._meta.get_field(field_path)
-                
+
             if isinstance(field, models.DateTimeField):
                 try:
                     gte_date = datetime.datetime.strptime(self.lookup_gte, '%Y-%m-%d')

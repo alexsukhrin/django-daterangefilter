@@ -34,7 +34,7 @@ class MyModelAdmin(ModelAdmin):
 
 
 def select_by(dictlist):
-    return [x for x in dictlist][0]
+    return list(dictlist)[0]
 
 
 class DateRangeFilterTestCase(TestCase):
